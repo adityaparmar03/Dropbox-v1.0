@@ -1,103 +1,61 @@
 import React, {Component} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import * as myactions from '../action_creators/index';
-
+import Nav from './nav'
+import SignIn from './signin'
+import SignUp from './signup'
 
 
 
 class Index extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+           type:true,
+           header:"Sign In",
+           footer:"Create an Account",
+           a:[1]
+        }
+     }
    
-    menu(list,index){
-        return ( 
-             <div class="rounded"><br/>
-             <div className="row">
-             <div className="col-sm-4" >{list.name}</div>
-             <div className="col-sm-4" >${list.price}</div>
-             <div className="col-sm-4" >
-             <button type="button" onClick={()=>this.props.Add(list)} className="btn btn-primary">Add</button>
-             </div></div></div>
-      )
-    }   
-    orders(list,index){
-         
-         if(list.qty === 0 ) 
-        { return ( 
-          
-             <div className="row">
-             </div>
-          )
-        }else {
-          return ( 
-                
-                 <div className="row" class="rounded">
-                 <div className="col-sm-4" >{list.name}</div>
-                 <div className="col-sm-4" >${list.price}
-                 <br/>Qty:{list.qty} </div>
-                 <div className="col-sm-4" >
-                 <button type="button" className="btn btn-success" onClick={()=>this.props.Remove(list)} key={ list.id }>Remove</button>
-                 </div></div>
-          )
-          }
-      }
-      total(){
-        var total=0;
-            this.props.items.map((item,i)=>{
-                total+=(item.qty*item.price);
-                return total
-            })
-      return total;
-      }
+    onSwitch=()=>{
+           
+            var newheader=this.state.footer;
+            var newfooter=this.state.header;
+            this.setState({type:!this.state.type,header:newheader,footer:newfooter})
+    }
+    display()
+    {
+         return (this.state.type ? <SignIn/> : <SignUp/>)
+    }
     render() {
         return (
-            <div className="container-fluid">
-             <div className="row">
-              <div className="col-sm-6" >
-                <div className="panel panel-primary">
-                    <div className="panel-heading">Menu</div>
-                    <div className="panel-body">
-                    
-                    {this.props.items.map(this.menu,this)}
-                    
-                    </div>
-                
-                </div>
-              </div>
-              <div className="col-sm-6" >
-              <div className="panel panel-success">
-                    <div className="panel-heading">Order</div>
-                    <div className="panel-body">
-                    {this.props.items.map(this.orders,this)}
-                        
-                    
-                    </div>
-                    <div className="panel-footer">
-                     Total:  ${
-                         
-                        this.total()
+        <div className="container-fluid">  
+          <Nav/>
+          <div className="container">
+          <div className="row" style={{marginTop: "100px"}}>
+            <div className="col">
+                <div style={{float:"right"}}>
+                <img src={require("../images/cartoon.png")} width="250" height="250" alt=""/>   
+                </div>    
+            </div>
+            <div className="col">
+              <div>
+                  <h5 className="btn btn-link" style={{marginLeft:"-15px"}}>{this.state.header}</h5>
 
-                     }
-                    </div>
-                </div>
+                  {/*switch the componenr*/}
+                  {this.display()}
+
+                  <button className="btn btn-link" style={{marginLeft:"-15px"}} 
+                  onClick={this.onSwitch}>{this.state.footer}</button>
               </div>
             </div>
+            </div>
+          </div>
           </div>
           
         );
     }
 }
-function mapStateToProps(state){
-   
-    return{
-       
-        items : state.food
-    }
-}
-function matchDispatchToProps(dispatch){
-    return bindActionCreators(myactions,dispatch)
-  
-    
-}
 
 
-export default connect(mapStateToProps,matchDispatchToProps)(Index);
+
+export default (Index);
