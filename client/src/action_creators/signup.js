@@ -6,10 +6,10 @@ export function SignUp(data){
     return  dispatch => {
         axios.post(url+"signup", data)
           .then(function (response) {
-            return dispatch({ type : "RESULT", payload : response.data } )
+            return dispatch({ type : "SIGNUP_RESULT", payload : response.data } )
           })
           .catch(function (error) {
-            return dispatch({ type : "ERROR", payload : error } )
+            return dispatch({ type : "SIGNUP_ERROR", payload : error } )
           });
          
      }

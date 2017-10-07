@@ -32,6 +32,20 @@ class SignUp extends Component {
             
             this.setState({user})
     }
+    display_msg(){
+        if(this.props.signup.status==="success"){
+            return (<div className="alert alert-success" role="alert">
+           {this.props.signup.msg}
+          </div>)
+        }else if(this.props.signup.status==="error"){
+            return (<div className="alert alert-danger" role="alert">
+                {this.props.signup.msg}
+          </div>)
+        }
+        else{
+            return <div></div>
+        }
+    }
     
     render() {
         return (
@@ -45,6 +59,9 @@ class SignUp extends Component {
                     <input type="password" className="form-control" placeholder="Password" 
                     onChange={e => this.updateState('password',e.target.value)} required/><br/>
                     <button className="btn btn-primary" onClick={()=>this.props.SignUp(this.state)}> Create an Account</button>
+                    <br/>
+                    <br/>
+                    {this.display_msg()}
             </div>
           
         );

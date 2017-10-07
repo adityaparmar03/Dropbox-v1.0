@@ -28,7 +28,20 @@ class SignIn extends Component {
             
             this.setState({user})
     }
-    
+    display_msg(){
+        if(this.props.signin.status==="success"){
+            return (<div className="alert alert-success" role="alert">
+           {this.props.signin.msg}
+          </div>)
+        }else if(this.props.signin.status==="error"){
+            return (<div className="alert alert-danger" role="alert">
+                {this.props.signin.msg}
+          </div>)
+        }
+        else{
+            return <div></div>
+        }
+    }
     
     render() {
         return (
@@ -38,6 +51,9 @@ class SignIn extends Component {
                   <input type="password" className="form-control" placeholder="Password" 
                   onChange={e => this.updateState('password',e.target.value)} required/><br/>
                   <button className="btn btn-primary" onClick={()=>this.props.SignIn(this.state)}> Sign in</button>
+                  <br/>
+                  <br/>
+                    {this.display_msg()}
             </div>
           
         );

@@ -1,28 +1,27 @@
 
 var signin_initialstate ={
-    response:"",
-    error:"",
+    status:"",
+    msg:"",
     token:""
 }
 export default function(state=signin_initialstate,action){
     
-    if(action.type === "RESULT"){
+    if(action.type === "SIGNIN_RESULT"){
         return{
             ...state,
-            response:action.payload.response,
-            token:action.payload.token
-           
-            
+            status:action.payload.status,
+            msg:action.payload.msg,
+            token:action.payload.token       
         }
     }
-    if(action.type === "ERROR"){
+    if(action.type === "SIGNIN_ERROR"){
         return{
             ...state,
-            error:action.payload,
-            
+            status:"error",
+            msg:"something went wrong",
+            token:action.payload.token        
         }
     }
-    
     
     return state;
 }

@@ -7,11 +7,10 @@ export function SignIn(data){
         console.log(JSON.stringify(data))
         axios.post(url+"signin", data)
           .then(function (response) {
-            console.log(JSON.stringify(response))
-            return dispatch({ type : "RESULT", payload : response.data } )
+            return dispatch({ type : "SIGNIN_RESULT", payload : response.data } )
           })
           .catch(function (error) {
-            return dispatch({ type : "ERROR", payload : error } )
+            return dispatch({ type : "SIGNIN_ERROR", payload : error } )
           });
          
      }

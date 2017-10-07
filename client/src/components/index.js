@@ -12,7 +12,6 @@ class Index extends Component {
            type:true,
            header:"Sign In",
            footer:"Create an Account",
-           a:[1]
         }
      }
    
@@ -26,6 +25,7 @@ class Index extends Component {
     {
          return (this.state.type ? <SignIn/> : <SignUp/>)
     }
+   
     render() {
         return (
         <div className="container-fluid">  
@@ -46,6 +46,8 @@ class Index extends Component {
 
                   <button className="btn btn-link" style={{marginLeft:"-15px"}} 
                   onClick={this.onSwitch}>{this.state.footer}</button>
+
+
               </div>
             </div>
             </div>

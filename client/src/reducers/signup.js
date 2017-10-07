@@ -1,26 +1,26 @@
 var signup_initialstate ={
-    response:"",
-    error:""
+    status:"",
+    msg:"",
+  
 }
 
 export default function(state=signup_initialstate,action){
     
-    if(action.type === "RESULT"){
+    if(action.type === "SIGNUP_RESULT"){
         return{
             ...state,
-            response:action.payload,
-           
-            
+            status:action.payload.status,
+            msg:action.payload.msg,
+               
         }
     }
-    if(action.type === "ERROR"){
+    if(action.type === "SIGNUP_ERROR"){
         return{
             ...state,
-            error:action.payload,
-            
+            status:"error",
+            msg:"something went wrong"      
         }
     }
-    
     
     return state;
 }
