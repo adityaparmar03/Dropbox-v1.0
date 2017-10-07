@@ -17,6 +17,7 @@ router.post('/', function(req, res, next) {
   var password = req.body.user.password;
 
   var check_user = "SELECT * FROM"+userdata+"where email='"+email+"'";
+  var token = jwt.generateToken(req.body.user);
 
   sql.execute_read_query(check_user).then(function(rows){
    
@@ -33,7 +34,7 @@ router.post('/', function(req, res, next) {
             res.json({
               status:"success",
               msg:"you are successfully signin",
-              token:""
+              token:token
             })
           }else{
             res.json({
