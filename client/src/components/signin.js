@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as myactions from '../action_creators/signin';
-
-
+ 
+import { withRouter } from 'react-router-dom'
 
 
 class SignIn extends Component {
@@ -31,7 +31,9 @@ class SignIn extends Component {
     display_msg(){
         if(this.props.signin.status==="success"){
             return (<div className="alert alert-success" role="alert">
-           {this.props.signin.msg}
+            {this.props.signin.msg  }
+            {localStorage.setItem("aditya-token",this.props.signin.token)}
+            {this.props.history.push('/')}
           </div>)
         }else if(this.props.signin.status==="error"){
             return (<div className="alert alert-danger" role="alert">
@@ -53,7 +55,7 @@ class SignIn extends Component {
                   <button className="btn btn-primary" onClick={()=>this.props.SignIn(this.state)}> Sign in</button>
                   <br/>
                   <br/>
-                    {this.display_msg()}
+                   {this.display_msg()}
             </div>
           
         );
@@ -74,4 +76,4 @@ function mapStateToProps(state){
  }
  
  
- export default connect(mapStateToProps,matchDispatchToProps)(SignIn);
+ export default withRouter(connect(mapStateToProps,matchDispatchToProps)(SignIn));
