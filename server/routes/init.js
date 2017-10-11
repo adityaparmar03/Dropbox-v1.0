@@ -21,6 +21,8 @@ function create_database_tables(){
               `password` VARCHAR(45) NULL,\
               `firstname` VARCHAR(45) NULL,\
               `lastname` VARCHAR(45) NULL,\
+              `aboutme` VARCHAR(300) NULL,\
+              `interests` VARCHAR(300) NULL,\
               PRIMARY KEY (`userid`));"
   
              con.query(userdata, function (err, result) {

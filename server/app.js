@@ -8,6 +8,10 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var signin = require('./routes/signin');
 var signup = require('./routes/signup');
+var home = require('./routes/home');
+var profile = require('./routes/profile');
+var upload = require('./routes/upload');
+var folder = require('./routes/folder');
 
 var app = express();
 var cors = require('cors')
@@ -27,10 +31,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('./public/files', express.static(path.join(__dirname, 'files')));
 
 app.use('/', index);
 app.use('/signin', signin);
 app.use('/signup', signup);
+app.use('/home', home);
+app.use('/profile', profile);
+app.use('/upload', upload);
+app.use('/folder', folder);
 
 
 // catch 404 and forward to error handler
