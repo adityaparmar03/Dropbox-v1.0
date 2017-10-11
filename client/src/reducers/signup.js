@@ -21,6 +21,13 @@ export default function(state=signup_initialstate,action){
             msg:"something went wrong"      
         }
     }
-    
+    if(action.type === "LOGOUT"){
+        return{
+            ...state,
+            status:"",
+            msg:"",
+          
+        }
+    }
     return state;
 }

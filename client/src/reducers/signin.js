@@ -22,6 +22,14 @@ export default function(state=signin_initialstate,action){
             token:action.payload.token        
         }
     }
-    
+    if(action.type === "LOGOUT"){
+        return{
+            ...state,
+            status:"",
+            msg:"",
+            token:""
+                 
+        }
+    }
     return state;
 }
