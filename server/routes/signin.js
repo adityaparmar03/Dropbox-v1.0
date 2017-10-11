@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
   
   var email = req.body.user.email;
   var password = req.body.user.password;
-
+ 
   var check_user = "SELECT * FROM"+userdata+"where email='"+email+"'";
   var token = jwt.generateToken(req.body.user);
 
