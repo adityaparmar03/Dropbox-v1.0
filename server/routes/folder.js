@@ -13,13 +13,44 @@ router.get('/', function(req, res, next) {
   
 
 });
+router.post('/root', function(req, res, next) {
+    
+    var userid = req.body.userid;
+   
+ 
+         
+        var getrootid = "SELECT contentid FROM dropbox.content where originalname = 'root' and userid = "+userid
+        sql.execute_read_query(getrootid)
+          .then(function(rows){
+              
+                 if(rows.length === 0){
+                   res.json({
+                     status:"success",
+                     msg:"No Content."
+                   })
+                  }
+                  else{
+                     
+                      res.json({
+                          contentid:rows[0].contentid,
+                          userid:userid})
+                  }
+              })
+          .catch((err) => setImmediate(() => { 
+            res.json({
+                status:"error",
+                msg:"Something went wrong, Try again."
+              })
+          }))
+  
+});
 router.post('/', function(req, res, next) {
   
   var userid = req.body.userid;
   
        
         var getcontent = "SELECT * FROM dropbox.content where contentid in\
-        (SELECT child_content_id FROM dropbox.conent_mapping where userid = '1' and parent_content_id=\
+        (SELECT child_content_id FROM dropbox.content_mapping where userid = '1' and parent_content_id=\
         (SELECT contentid FROM dropbox.content where originalname='root' and userid='1'))"
         sql.execute_read_query(getcontent)
         .then(function(rows){
@@ -36,7 +67,8 @@ router.post('/', function(req, res, next) {
                         originalname:item.originalname,
                         virtualname:item.virtualname,
                         date:item.date,
-                        type:item.type})
+                        type:item.type,
+                        })
                     })
                     res.json(content)
                 }
@@ -53,15 +85,20 @@ router.post('/', function(req, res, next) {
         console.log("contentid"+contentid)
              
               var getcontent = "SELECT * FROM dropbox.content where contentid in\
-              (SELECT child_content_id FROM dropbox.conent_mapping where userid = '"+userid+"' and parent_content_id=\
+              (SELECT child_content_id FROM dropbox.content_mapping where userid = '"+userid+"' and parent_content_id=\
               (SELECT contentid FROM dropbox.content where contentid='"+contentid+"' and userid='"+userid+"'))"
               sql.execute_read_query(getcontent)
               .then(function(rows){
                   
                      if(rows.length === 0){
+                       var content=[{
+                            type:"nocontent",
+                            msg:"No Content."
+                        }]
+                        
                        res.json({
-                         status:"success",
-                         msg:"No Content."
+                        content:content,
+                        currentfolderid:contentid,
                        })
                       }
                       else{
@@ -72,7 +109,10 @@ router.post('/', function(req, res, next) {
                               date:item.date,
                               type:item.type})
                           })
-                          res.json(content)
+                          res.json({
+                                    content:content,
+                                    currentfolderid:contentid
+                                   })
                       }
                   })
               .catch((err) => setImmediate(() => { 
