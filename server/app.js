@@ -12,6 +12,8 @@ var home = require('./routes/home');
 var profile = require('./routes/profile');
 var upload = require('./routes/upload');
 var folder = require('./routes/folder');
+var star = require('./routes/star');
+var share = require('./routes/share');
 
 var app = express();
 var cors = require('cors')
@@ -40,7 +42,8 @@ app.use('/home', home);
 app.use('/profile', profile);
 app.use('/upload', upload);
 app.use('/folder', folder);
-
+app.use('/star', star);
+app.use('/share', share);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

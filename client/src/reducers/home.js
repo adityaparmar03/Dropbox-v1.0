@@ -66,6 +66,13 @@ export default function(state=home_initialstate,action){
             msg:action.payload.msg
         }
     }
+    if(action.type === "SHARE_RESULT"){
+        return{
+            ...state,
+            status:action.payload.status,
+            msg:action.payload.msg
+        }
+    }
     if(action.type === "LOGOUT"){
         return{
             ...state,

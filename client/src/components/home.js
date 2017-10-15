@@ -7,7 +7,7 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import Menu from './menu'
 import  '../css/uploadfile.css'
-
+import '../css/table.css'
 class Home extends Component {
     constructor(props){
         super(props);
@@ -21,6 +21,8 @@ class Home extends Component {
             files:[],
             foldertrack:[],
             currentfolderid:0,
+            publicsharinglink:"",
+            sharedcontentid:""
            
           
         }
@@ -35,6 +37,14 @@ class Home extends Component {
             
             this.setState({user})
     }*/
+    share(file){
+       var link="http://localhost:9000/files/"+file.virtualname 
+       this.setState({publicsharinglink:link})
+       this.setState({sharedcontentid:file.contentid})
+
+
+    }
+  
     
 
     handleFileUpload = (event) => {
@@ -138,10 +148,11 @@ class Home extends Component {
           }
          
       }
-
+     
       componentWillReceiveProps(nextProps) {
         if (nextProps.home) {
             this.check=0;
+
             this.setState({
                 email:nextProps.home.email,
                 firstname:nextProps.home.firstname,
@@ -152,21 +163,37 @@ class Home extends Component {
                 currentfolderid:nextProps.home.currentfolderid
                 
               })
+
+              
           
           
         }
     }  
     
     check=0;
+    star(isstar,contentid){
+        if(isstar==="YES"){
+            return <img onClick={()=>this.props.dostar(contentid,"NO",this.state.currentfolderid,this.state.userid)} src={require('../images/bluestar.png')} alt="" style={{width:"20px",height:"20px"}}/>           
+        }
+        else{
+            return <img onClick={()=>this.props.dostar(contentid,"YES",this.state.currentfolderid,this.state.userid)} src={require('../images/whitestar.png')} alt="" style={{width:"20px",height:"20px"}}/>           
+            
+        }
+    }
     display(file,i){
         
         if(file.type==="file")
         {
             this.check =1;
+            var star = file.star;
+            console.log(star)
+
         return (<tr key={file.contentid}>
-            <td>
+            <td style={{width:"50%"}}>
+
             <img src={require('../images/file.png')} alt="" style={{width:"50px",height:"50px"}}/>    
             <a  href={"http://localhost:9000/files/"+file.virtualname} target="_blank">{file.originalname}</a>
+            {this.star(file.star,file.contentid)}
             </td>
             <td>
             <p>{(file.date).substring(0,25)}</p>    
@@ -179,9 +206,10 @@ class Home extends Component {
              data-toggle="dropdown"><b>&middot;&middot;&middot;</b></button>
             <ul className="dropdown-menu" role="menu">
                 
-                <li role="presentation"><a role="menuitem" tabindex="-1" 
-                href={"http://localhost:9000/files/"+file.virtualname} download>Download</a></li>
-         
+                <li role="presentation">
+                <a href={"http://localhost:9000/files/"+file.virtualname} download>Download</a></li>
+                <li><a data-toggle="modal" data-target="#fileModal" onClick={()=>this.share(file)}>Share</a></li>
+                <li><a>Delete</a></li>
             </ul>
             </td>     
             </tr>
@@ -191,9 +219,11 @@ class Home extends Component {
             this.check =1;
         
         return ( <tr key={file.contentid}>
-            <td>
+            <td  style={{width:"50%"}}>
+            
             <img src={require('../images/folder.png')} alt="" style={{width:"50px",height:"50px"}}/>        
             <button className="btn btn-link"  onClick={()=>this.getData(file,"add")}>{file.originalname}</button> 
+            {this.star(file.star,file.contentid)}
             </td>
             <td>
             <p>{(file.date).substring(0,25)}</p>    
@@ -206,8 +236,9 @@ class Home extends Component {
              data-toggle="dropdown"><b>&middot;&middot;&middot;</b></button>
             <ul className="dropdown-menu" role="menu" aria-labelledby="menu1">
                 
-                <li role="presentation"><a role="menuitem" tabindex="-1" 
-                href=""></a></li>
+                <li><a data-toggle="modal" data-target="#folderModal" onClick={()=>this.share(file)}>Share</a></li>
+                <li><a>Delete</a></li>
+            
          
             </ul>
             </td> 
@@ -226,14 +257,32 @@ class Home extends Component {
         }
         
     }
+    errordisplay(){
+        if(this.state.msg!=="token verified successfully"){
+            if(this.state.status==="success"){
+                return (<div className="alert alert-success alert-dismissable fade in">
+                <a  className="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {this.state.msg} </div>)
+            }else{
+                return (<div className="alert alert-danger alert-dismissable fade in">
+                <a className="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {this.state.msg} </div>)
+            }
+        }else{
+            <div></div>
+        } 
+    }
     render() {
         return (
             <div className="container-fluid">  
+               
             <div className="row">
                 <div className="col-6 col-md-2">
                 <Menu/>
                 </div>
                 <div className="col-6 col-md-8">
+               
+                {this.errordisplay()}
                     <div style={{marginTop:"5%"}}>
                         <h4>Dropbox</h4>
                     </div>
@@ -248,7 +297,7 @@ class Home extends Component {
                     <thead>
                      <tr>
                          
-                            <th>Name</th>
+                            <th  style={{width:"50%"}}>Name</th>
                             <th>Date</th>
                             <th>Member</th>
                             <th></th>
@@ -286,6 +335,54 @@ class Home extends Component {
                     </div>
                 </div>
             </div>
+            <div className="modal fade" id="fileModal" role="dialog">
+                <div className="modal-dialog"> 
+                <div className="modal-content">
+                    <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal">&times;</button>
+                    <h4 className="modal-title">Share</h4>
+                    </div>
+                    <div className="modal-body">
+                    <p>Public Link:<input className="form-control" value={this.state.publicsharinglink}/></p>
+                    <hr/>
+                    <input placeholder="Email" className="form-control" ref="fileemailid"/><br/>
+                    <button className="btn btn-primary"  onClick={()=>this.props.shareByEmail( this.refs.fileemailid.value,this.state.userid,this.state.sharedcontentid)}>Share</button>
+                  
+                    </div>
+                    
+                   
+                    <div className="modal-footer">
+                    <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+      
+                </div>
+            </div>
+            <div className="modal fade" id="folderModal" role="dialog">
+                <div className="modal-dialog"> 
+                <div className="modal-content">
+                    <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal">&times;</button>
+                    <h4 className="modal-title">Share</h4>
+                    </div>
+                    <div className="modal-body">
+                    
+                    <input placeholder="Email"  className="form-control"
+                    ref="folderemailid" /><br/>
+                    <button className="btn btn-primary"
+                    onClick={()=>this.props.shareByEmail(this.refs.folderemailid.value,this.state.userid,this.state.sharedcontentid)}>Share</button>
+                    </div>
+                    
+                    
+                   
+                    <div className="modal-footer">
+                    <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+      
+                </div>
+            </div>
+                  
           </div>
         );
     }

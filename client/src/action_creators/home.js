@@ -93,3 +93,41 @@ export function UploadFile(payload){
        
      }
 }
+export function dostar(contentid,value,curentfolderid,userid){
+  
+  return  dispatch => {
+     
+      axios.post(url+"star", {"contentid":contentid,"value":value})
+        .then(function (response) {
+          
+          axios.post(url+"folder/load", {"userid":userid,"folderid":curentfolderid}).then((response)=>{
+                    return dispatch({ type : "FOLDER_RESULT", payload : response.data } )
+               
+              }).catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+        })
+        .catch(function (error) {
+          return dispatch({ type : "HOME_ERROR", payload : error } )
+        });
+       
+   }
+  
+}
+export function shareByEmail(email,userid,contentid){
+  {console.log("email"+email)}
+  return  dispatch => {
+   
+      axios.post(url+"share", {"email":email,"userid":userid,"contentid":contentid})
+        .then(function (response) {
+          return dispatch({ type : "SHARE_RESULT", payload : response.data } )
+               
+              }).catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+     
+      
+       
+   }
+  
+}
