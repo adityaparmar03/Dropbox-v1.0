@@ -6,6 +6,12 @@ var sql = require('./sql')
 var insert = "INSERT INTO ";
 var userdata ="`dropbox`.`userdata` ";
 
+var bcrypt = require('bcrypt');
+
+// Create a password salt
+var salt = bcrypt.genSaltSync(10);
+
+
 router.get('/', function(req, res, next) {
   
   
@@ -14,7 +20,7 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   
   var email = req.body.user.email;
-  var password = req.body.user.password;
+  var password = req.body.user.password.trim();
  
   var check_user = "SELECT * FROM"+userdata+"where email='"+email+"'";
   var token = jwt.generateToken(req.body.user);
@@ -29,8 +35,9 @@ router.post('/', function(req, res, next) {
         })
         }
         else{
-          console.log("rows-"+JSON.stringify(rows))
-          if(rows[0].password === password){
+          var actualpassword = bcrypt.hashSync(rows[0].password, salt)
+          console.log(actualpassword)
+          if(actualpassword === password){
             res.json({
               status:"success",
               msg:"you are successfully signin",
