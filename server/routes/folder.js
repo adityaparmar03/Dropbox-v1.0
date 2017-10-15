@@ -68,6 +68,7 @@ router.post('/', function(req, res, next) {
                         virtualname:item.virtualname,
                         date:item.date,
                         type:item.type,
+                        star:item.star
                         })
                     })
                     res.json(content)
@@ -83,10 +84,18 @@ router.post('/', function(req, res, next) {
         var userid = req.body.userid;
         var contentid = req.body.folderid;
         console.log("contentid"+contentid)
-             
+           /*
+             ORIGINAL BEFORE SHARING
+
               var getcontent = "SELECT * FROM dropbox.content where contentid in\
               (SELECT child_content_id FROM dropbox.content_mapping where userid = '"+userid+"' and parent_content_id=\
               (SELECT contentid FROM dropbox.content where contentid='"+contentid+"' and userid='"+userid+"'))"
+          
+           
+           */
+              var getcontent = "SELECT * FROM dropbox.content where contentid in\
+              (SELECT child_content_id FROM dropbox.content_mapping where  parent_content_id=\
+              (SELECT contentid FROM dropbox.content where contentid='"+contentid+"'))"
               sql.execute_read_query(getcontent)
               .then(function(rows){
                   
@@ -107,7 +116,9 @@ router.post('/', function(req, res, next) {
                               originalname:item.originalname,
                               virtualname:item.virtualname,
                               date:item.date,
-                              type:item.type})
+                              type:item.type,
+                              star:item.star
+                            })
                           })
                           res.json({
                                     content:content,
@@ -116,7 +127,11 @@ router.post('/', function(req, res, next) {
                       }
                   })
               .catch((err) => setImmediate(() => { 
-                      throw err;
+                      //throw err;
+                      res.json({
+                        status:"error",
+                        msg:"Something went wrong."
+                   })
               }))
       
           })
