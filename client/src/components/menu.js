@@ -17,8 +17,8 @@ class Menu extends Component {
                             <img src={require("../images/dropbox_logo.svg")} width="50" height="50" alt=""/>   
                             </a>
                             <a onClick={()=>this.props.history.push("/")}>My files</a>
-                            <a onClick={()=>this.props.history.push("/")}>Sharing</a>
-                            <a onClick={()=>this.props.history.push("/")}>My files</a>
+                            <a onClick={()=>this.props.history.push("/activitylog")}>Activity</a>
+                           
                             <a onClick={()=>this.props.history.push("/profile")}>Profile</a>
                      
             </div>

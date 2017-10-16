@@ -8,23 +8,26 @@ class Nav extends Component {
         return (
             
                 <div style={{boxShadow : '0px 0px 5px #888888'}}>
-                <nav className="navbar navbar-expand-lg navbar-dark bg-white justify-content-between">
-               
-              
                 
-                  <ul className="nav mx-auto">
-                    <li className="nav-item">
-                    <a className="navbar-brand">
+              
+                <div className="jumbotron" style={{height:"15px",backgroundColor:"white"}}>
+                 
+                   <div className="row" style={{marginTop:"-35px"}}>
+                   <div className="col-6 col-md-4">  </div>
+                    <div className="col-6 col-md-4">
+                      <div style={{display:'inline'}}>
                       <img src={require("../images/dropbox_logo.svg")} width="50" height="50" alt=""/>   
                       <b style={{fontSize:'30px', marginLeft:"15px"}}>Dropbox</b>
-                      </a>
-                    </li>
+                      </div>
+                      </div>
+                     <div className="col-6 col-md-4">  </div> 
+                    </div>
                    
                    
-                  </ul>
-               
+                 
+              </div>
                 
-              </nav>
+              
              </div>
                
          

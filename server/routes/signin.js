@@ -7,19 +7,17 @@ var insert = "INSERT INTO ";
 var userdata ="`dropbox`.`userdata` ";
 
 var bcrypt = require('bcrypt');
-
-// Create a password salt
-var salt = bcrypt.genSaltSync(10);
+var bsalt = require('./const')
 
 
 router.get('/', function(req, res, next) {
   
-  
+  res.send("signing")
 
 });
 router.post('/', function(req, res, next) {
   
-  var email = req.body.user.email;
+  var email = req.body.user.email.trim();
   var password = req.body.user.password.trim();
  
   var check_user = "SELECT * FROM"+userdata+"where email='"+email+"'";
@@ -35,9 +33,9 @@ router.post('/', function(req, res, next) {
         })
         }
         else{
-          var actualpassword = bcrypt.hashSync(rows[0].password, salt)
-          console.log(actualpassword)
-          if(actualpassword === password){
+          var actualpassword = bcrypt.hashSync(password, rows[0].salt)
+          
+          if(actualpassword === rows[0].password){
             res.json({
               status:"success",
               msg:"you are successfully signin",
@@ -53,7 +51,11 @@ router.post('/', function(req, res, next) {
          
         }
       }).catch((err) => setImmediate(() => { 
-        throw err;
+        res.json({
+          status:"error",
+          msg:"something went wrong.",
+          token:""
+        })
       })); 
             
             

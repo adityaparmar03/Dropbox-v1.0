@@ -19,12 +19,25 @@ router.post('/', function(req, res, next) {
   
  var email = req.body.email;
  var contentid = req.body.contentid;
- //var sender_userid = req.body.userid;
+ var sender_userid = req.body.userid;
+
+ function twoDigits(d) {
+    if(0 <= d && d < 10) return "0" + d.toString();
+    if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+    return d.toString();
+}
+
+Date.prototype.toMysqlFormat = function() {
+    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getUTCHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+};
+ 
+var date = Date().toString();
+
 
  var getuserid = "SELECT userid from"+userdata+"where email='"+email+"'";
  
  
-console.log("contentid"+contentid)
+
  
  sql.execute_read_query(getuserid).then(function(rows){
             
@@ -40,13 +53,23 @@ console.log("contentid"+contentid)
                         VALUES ('"+rootid+"', '"+contentid+"', 'shared', '"+recieveruserid+"')"
                         
                         sql.execute_query(insertshared).then(function(rows){
+                            
                             if(rows){
-                                res.json({
-                                    status:"success",
-                                    msg:"Content has shared successfully"
-                    
-                                  })
+                                var actmsg = "You have shared file/folder." 
+                                var activityquery = "INSERT INTO\
+                                `dropbox`.`activity_log` (`msg`, `date`,`userid`) \
+                                VALUES ('"+actmsg+"','"+date+"', '"+sender_userid+"')"
+                                
+                                sql.execute_query(activityquery).then(function(rows) {
+                                    if(rows){
+                                    res.json({
+                                        status:"success",
+                                        msg:"Content has shared successfully"
+                        
+                                    })
                             }
+                        })
+                        }
                             else{
                                 res.json({
                                 status:"error",
@@ -55,6 +78,13 @@ console.log("contentid"+contentid)
                             }
                         })
                     }
+                    
+                })
+            }
+            else{
+                res.json({
+                    status:"error",
+                    msg:"This is not an valid Email ID/ User."
                 })
             }
             

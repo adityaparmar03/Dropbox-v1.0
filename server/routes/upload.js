@@ -80,11 +80,20 @@ router.post('/', upload.single('myfile'), function (req, res, next) {
                         virtualname:file_virtual_name,
                         date:date,
                         type:type}
-                    res.json({
-                        content:content,
-                        status:"success",
-                        msg:"File is successfully uploaded."
-                    });
+                        var actmsg = file_original_name+" "+type+" created."  
+                        var activityquery = "INSERT INTO\
+                        `dropbox`.`activity_log` (`msg`, `date`,`userid`) \
+                        VALUES ('"+actmsg+"','"+date+"', '"+userid+"')"
+                        
+                        sql.execute_query(activityquery).then(function(rows) {
+                            if(rows){
+                              res.json({
+                                  content:content,
+                                  status:"success",
+                                  msg:"File is successfully created."
+                              });
+                            }
+                        })
                 }
             })
         }  
@@ -133,20 +142,32 @@ router.post('/createfolder', function (req, res, next) {
             sql.execute_read_query(getfileid).then(function(rows) {
             if(rows.length > 0){
                 var child = rows[0].contentid;
+                
                 var maptofolder = insert+content_mapping+ "(`parent_content_id`,\
                 `child_content_id`, `userid`) VALUES ('"+parent+"', '"+child+"', '"+userid+"')"
-                 sql.execute_query(maptofolder).then(function(rows) {
+                 
+                sql.execute_query(maptofolder).then(function(rows) {
                     if(rows){
                         var content = {contentid:child,
                             originalname:folder_original_name,
                             virtualname:folder_virtual_name,
                             date:date,
                             type:type}
-                        res.json({
-                            content:content,
-                            status:"success",
-                            msg:"Folder is successfully created."
-                        });
+                          var actmsg = folder_original_name+" "+type+" created."  
+                          var activityquery = "INSERT INTO\
+                          `dropbox`.`activity_log` (`msg`, `date`,`userid`) \
+                          VALUES ('"+actmsg+"','"+date+"', '"+userid+"')"
+                          
+                          sql.execute_query(activityquery).then(function(rows) {
+                              if(rows){
+                                res.json({
+                                    content:content,
+                                    status:"success",
+                                    msg:"Folder is successfully created."
+                                });
+                              }
+                          })    
+                        
                     }
                 })
             }  

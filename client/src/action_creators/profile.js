@@ -15,12 +15,22 @@ export function INIT(token){
        
    }
 }
-export function UPDATE(user){
+export function UPDATE(email,password,firstname,lastname,aboutme,interests,userid,isPasswordChanged){
+ 
     return  dispatch => {
        
-        axios.post(url+"profile/update", {"user":user})
+        axios.post(url+"profile/update", {user:{
+          email:email,
+          password:password,
+          firstname:firstname,
+          lastname:lastname,
+          aboutme:aboutme,
+          interests:interests,
+          userid : userid,
+          isPasswordChanged:isPasswordChanged
+        }})
           .then(function (response) {
-            return dispatch({ type : "PROFILE_RESULT", payload : response.data } )
+            return dispatch({ type : "UPDATE_RESULT", payload : response.data } )
           })
           .catch(function (error) {
             return dispatch({ type : "PROFILE_ERROR", payload : error } )
@@ -31,7 +41,7 @@ export function UPDATE(user){
 export function LOGOUT(token){
 
   localStorage.clear();
-
+  sessionStorage.clear();
   return ({ type : "LOGOUT", payload : "" } )
    
        

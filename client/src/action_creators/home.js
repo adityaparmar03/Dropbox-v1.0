@@ -50,15 +50,7 @@ export function CREATFOLDER(userid,folderid){
   
     }
 
-export function LOGOUT(token){
 
-  localStorage.clear();
-
-  return ({ type : "LOGOUT", payload : "" } )
-   
-       
-   
-}
 
 export function UploadFile(payload){
   return  dispatch => {
@@ -115,7 +107,7 @@ export function dostar(contentid,value,curentfolderid,userid){
   
 }
 export function shareByEmail(email,userid,contentid){
-  {console.log("email"+email)}
+  
   return  dispatch => {
    
       axios.post(url+"share", {"email":email,"userid":userid,"contentid":contentid})
@@ -131,3 +123,33 @@ export function shareByEmail(email,userid,contentid){
    }
   
 }
+export function deleteContent(parentid,contentid,userid){
+
+  console.log("parentid"+parentid);
+  console.log("contentid"+contentid);
+  console.log("userid"+userid);
+  
+  return  dispatch => {
+   
+      axios.post(url+"deletecontent", {"userid":userid,"contentid":contentid,"parentid":parentid})
+        .then(function (response) {
+          return dispatch({ type : "DELETE_RESULT", payload : response.data } )
+               
+              }).catch(function (error) {
+                  return dispatch({ type : "HOME_ERROR", payload : error } )
+                });
+     
+      
+       
+   }
+  
+}
+export function LOGOUT(token){
+  
+    localStorage.clear();
+    sessionStorage.clear();
+    return ({ type : "LOGOUT", payload : "" } )
+     
+         
+     
+  }

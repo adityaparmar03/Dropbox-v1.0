@@ -14,6 +14,8 @@ var upload = require('./routes/upload');
 var folder = require('./routes/folder');
 var star = require('./routes/star');
 var share = require('./routes/share');
+var activitylog = require('./routes/activitylog');
+var deletecontent = require('./routes/deletecontent');
 
 var app = express();
 var cors = require('cors')
@@ -44,6 +46,9 @@ app.use('/upload', upload);
 app.use('/folder', folder);
 app.use('/star', star);
 app.use('/share', share);
+app.use('/activitylog', activitylog);
+app.use('/deletecontent', deletecontent);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

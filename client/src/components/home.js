@@ -89,7 +89,7 @@ class Home extends Component {
                     }
 
                     if (sessionStorage.ft) {
-                        console.log("one")
+                        
                         console.log((sessionStorage.foldertrack));
                         console.log(this.state.foldertrack);
                         this.state.foldertrack= (JSON.parse(sessionStorage.foldertrack))
@@ -97,7 +97,7 @@ class Home extends Component {
                     } else 
                     {
                         
-                        console.log("two")
+                        
                         this.setState({foldertrack:[{contentid:"root",originalname:"Dropbox",seq:0}]})
                         sessionStorage.foldertrack = JSON.stringify([{contentid:"root",originalname:"Dropbox",seq:0}]);
                         sessionStorage.ft ="yes"
@@ -209,7 +209,8 @@ class Home extends Component {
                 <li role="presentation">
                 <a href={"http://localhost:9000/files/"+file.virtualname} download>Download</a></li>
                 <li><a data-toggle="modal" data-target="#fileModal" onClick={()=>this.share(file)}>Share</a></li>
-                <li><a>Delete</a></li>
+                <li><a onClick={()=>this.props.deleteContent(this.state.currentfolderid,
+                    file.contentid,this.state.userid )}>Delete</a></li>
             </ul>
             </td>     
             </tr>
@@ -237,7 +238,8 @@ class Home extends Component {
             <ul className="dropdown-menu" role="menu" aria-labelledby="menu1">
                 
                 <li><a data-toggle="modal" data-target="#folderModal" onClick={()=>this.share(file)}>Share</a></li>
-                <li><a>Delete</a></li>
+                <li><a onClick={()=>this.props.deleteContent(this.state.currentfolderid,
+                    file.contentid,this.state.userid )}>Delete</a></li>
             
          
             </ul>
@@ -258,15 +260,15 @@ class Home extends Component {
         
     }
     errordisplay(){
-        if(this.state.msg!=="token verified successfully"){
+        if(this.state.msg!=="you are successfully Logged In." ){
             if(this.state.status==="success"){
-                return (<div className="alert alert-success alert-dismissable fade in">
-                <a  className="close" data-dismiss="alert" aria-label="close">&times;</a>
-                {this.state.msg} </div>)
+                return (<div className="alert alert-success">
+                {this.state.msg}
+                 </div>)
             }else{
-                return (<div className="alert alert-danger alert-dismissable fade in">
-                <a className="close" data-dismiss="alert" aria-label="close">&times;</a>
-                {this.state.msg} </div>)
+                return (<div className="alert alert-danger">
+                {this.state.msg}
+                 </div>)
             }
         }else{
             <div></div>

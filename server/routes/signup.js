@@ -27,35 +27,48 @@ Date.prototype.toMysqlFormat = function() {
  
 var date = Date().toString();
 
-  var firstname = req.body.user.firstname;
-  var lastname = req.body.user.lastname;
-  var email = req.body.user.email;
-  var password = req.body.user.password;
+  var firstname = req.body.user.firstname.trim();
+  var lastname = req.body.user.lastname.trim();
+  var email = req.body.user.email.trim();
+  var password = req.body.user.password.trim();
   //console.log("salt"+bsalt.getsalt())
-  var passwordToSave = bcrypt.hashSync(password, bsalt.getsalt())
+  var salt = bsalt.getsalt();
+  var passwordToSave = bcrypt.hashSync(password,salt)
 
   var check_user = "SELECT * FROM"+userdata+"where email='"+email+"'";
 
   var insert_user = insert+userdata+"(`email`, \
-  `password`, `firstname`, `lastname`) \
-   VALUES ('"+email+"','"+passwordToSave+"','"+firstname+"','"+lastname+"');"
+  `password`,`salt`, `firstname`, `lastname`) \
+   VALUES ('"+email+"','"+passwordToSave+"','"+salt+"','"+firstname+"','"+lastname+"');"
 
   sql.execute_read_query(check_user).then(function(rows){
    
       if(rows.length === 0){
           sql.execute_query_with_ID(insert_user).then(function(rows) {
             if(rows){
+              var userid = parseInt(rows);
               var root = insert+content+"(`originalname`, \
               `virtualname`, `date`, `type`,`star`,`userid`) \
-               VALUES ('root','root','"+date+"','folder','NO','"+parseInt(rows)+"');"
+               VALUES ('root','root','"+date+"','folder','NO','"+userid+"');"
 
               sql.execute_query(root).then(function(rows){
                   if(rows){
-                    res.json({
-                    status:"success",
-                    msg:"Account created successfully."
+                   
+                    var actmsg = "Account is successfully created."
+                    var activityquery = "INSERT INTO\
+                    `dropbox`.`activity_log` (`msg`, `date`,`userid`) \
+                    VALUES ('"+actmsg+"','"+date+"', '"+userid+"')"
+                    
+                    sql.execute_query(activityquery).then(function(rows) {
+                        if(rows){
+                          res.json({
+                              content:content,
+                              status:"success",
+                              msg:"Account is successfully created."
+                          });
+                        }
                   })
-                  }
+                }
                   else{
                     res.json({
                       status:"error",
@@ -80,7 +93,11 @@ var date = Date().toString();
           })
         }
       }).catch((err) => setImmediate(() => { 
-        throw err;
+        res.json({
+          status:"error",
+          msg:"something went wrong.",
+          token:""
+        })
       })); 
             
   }); 

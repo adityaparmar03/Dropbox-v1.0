@@ -22,7 +22,7 @@ export default function(state=profile_initialstate,action){
             password:action.payload.password,
             aboutme:action.payload.aboutme,
             interests:action.payload.interests,
-            useid:action.payload.userid    
+            userid:action.payload.userid    
         }
     }
     if(action.type === "PROFILE_ERROR"){
@@ -33,6 +33,15 @@ export default function(state=profile_initialstate,action){
                  
         }
     }
+    if(action.type === "UPDATE_RESULT"){
+        return{
+            ...state,
+            status:action.payload.status,
+            msg:action.payload.msg,
+                 
+        }
+    }
+    
     if(action.type === "LOGOUT"){
         return{
             ...state,

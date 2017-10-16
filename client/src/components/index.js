@@ -32,12 +32,12 @@ class Index extends Component {
           <Nav/>
           <div className="container">
           <div className="row" style={{marginTop: "100px"}}>
-            <div className="col">
+            <div className="col-6 col-md-6">
                 <div style={{float:"right"}}>
                 <img src={require("../images/cartoon.png")} width="250" height="250" alt=""/>   
                 </div>    
             </div>
-            <div className="col">
+            <div className="col-6 col-md-6">
               <div>
                   <h5 className="btn btn-link" style={{marginLeft:"-15px"}}>{this.state.header}</h5>
 

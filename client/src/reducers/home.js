@@ -50,6 +50,15 @@ export default function(state=home_initialstate,action){
                  
         }
     }
+    if(action.type === "DELETE_RESULT"){
+        return{
+            ...state,
+            files:action.payload.content,
+            status:action.payload.status,
+            msg:action.payload.msg
+                 
+        }
+    }
     if(action.type === "CREARE_FOLDER_ERROR"){
         return{
             ...state,
@@ -74,6 +83,7 @@ export default function(state=home_initialstate,action){
         }
     }
     if(action.type === "LOGOUT"){
+        //sessionStorage.ft = null;
         return{
             ...state,
             email:"",
